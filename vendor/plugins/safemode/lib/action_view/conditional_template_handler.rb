@@ -1,18 +1,18 @@
 module ActionView
-  class Template    
-    def initialize(view, path, use_full_path, locals = {})
-      @view = view
-      @finder = @view.finder
-
-      # Clear the forward slash at the beginning if exists
-      @path = use_full_path ? path.sub(/^\//, '') : path
-      @view.first_render ||= @path
-      @source = nil # Don't read the source until we know that it is required
-      set_extension_and_file_name(use_full_path)
-
-      @locals = locals || {}
-      @handler = self.class.handler_class_for_template(self).new(@view)
-    end
+  class Template
+    # def initialize(view, path, use_full_path, locals = {})
+    #   @view = view
+    #   @finder = @view.finder
+    # 
+    #   # Clear the forward slash at the beginning if exists
+    #   @path = use_full_path ? path.sub(/^\//, '') : path
+    #   @view.first_render ||= @path
+    #   @source = nil # Don't read the source until we know that it is required
+    #   set_extension_and_file_name(use_full_path)
+    # 
+    #   @locals = locals || {}
+    #   @handler = self.class.handler_class_for_template(self).new(@view)
+    # end
   
     def self.register_template_handler(extension, klass, options = {})
       @@template_handlers[extension.to_sym] = options.update(:class => klass)
