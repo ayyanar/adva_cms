@@ -40,7 +40,8 @@ module ThemeSupport
       def add_theme_view_paths
         if respond_to? :current_theme_paths
           current_theme_paths.each do |path|
-            response.template.finder.prepend_view_path "#{path}/templates"
+            response.template.view_paths.unshift "#{path}/templates"
+            # response.template.finder.prepend_view_path "#{path}/templates"
           end
         end        
       end

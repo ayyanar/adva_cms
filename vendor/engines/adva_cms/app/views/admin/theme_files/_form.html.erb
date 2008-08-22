@@ -9,5 +9,7 @@
 <% end %>
 <p class="buttons">
   <%= submit_tag 'Save' %>	
-  <%= link_to 'Delete', admin_theme_file_path(@site, @theme.id, @file.id), { :confirm => "Are you sure you wish to delete this file?", :method => :delete } %>  
+  <% unless @file.id.blank? %>
+    <%= link_to 'Delete', admin_theme_file_path(@site, @theme.id, @file.id), { :confirm => "Are you sure you wish to delete this file?", :method => :delete } %>  
+  <% end %>
 </p>

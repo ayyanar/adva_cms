@@ -60,8 +60,15 @@ class Admin::ThemeFilesController < Admin::BaseController
   
     def expire_template!(file)
       return unless file.is_a? Theme::Template
-      ActionView::TemplateFinder.reload!
-      if method = ActionView::Base.new.method_names.delete(file.fullpath.to_s)
+      ActionView::Base.new.view_paths.reload!
+      
+      # need to steal this from ActionView::Template because it's not reusable for non-existant files
+      segment = file.fullpath.to_s
+      segment.sub!(/^#{Regexp.escape(File.expand_path(RAILS_ROOT))}/, '') if defined?(RAILS_ROOT)
+      segment.gsub!(/([^a-zA-Z0-9_])/) { $1.ord }
+
+      compiled = ActionView::Base::CompiledTemplates.instance_methods(false).select{|name| name =~ /#{segment}/ }
+      compiled.each do |method|
         ActionView::Base::CompiledTemplates.send :remove_method, method
       end
     end
