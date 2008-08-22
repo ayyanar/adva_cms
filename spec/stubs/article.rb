@@ -19,6 +19,7 @@ define Article do
            :body => 'body',
            :body_html => 'body html',
            :tag_list => 'foo bar',
+           :state => :published,
            :version => 1,
            :author= => nil, # TODO add this to Stubby
            :author_name => 'author_name',

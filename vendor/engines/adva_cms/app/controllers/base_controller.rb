@@ -15,6 +15,7 @@ class BaseController < ApplicationController
   layout 'default'
   widget :sections, :partial => 'widgets/sections'
   
+  rescue_from ActionController::RoleRequired, :with => :role_required
 
   acts_as_themed_controller :current_themes => lambda {|c| c.site.current_themes if c.site }
   #                          :force_template_types => ['html.serb', 'liquid']
@@ -83,12 +84,16 @@ class BaseController < ApplicationController
       @site.page_cache_subdirectory
     end
     
-    def rescue_action(exception)
-      if exception.is_a? ActionController::RoleRequired
-        redirect_to_login exception.message
-      else
-        super
-      end
+    # def rescue_action(exception)
+    #   if exception.is_a? ActionController::RoleRequired
+    #     redirect_to_login exception.message
+    #   else
+    #     super
+    #   end
+    # end
+  
+    def role_required(exception)
+      redirect_to_login exception.message
     end
     
     def redirect_to_login(notice = nil)

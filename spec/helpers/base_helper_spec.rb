@@ -9,19 +9,17 @@ describe BaseHelper do
       @head = '<form action="path/to/article" method="post">'
       @form = "the form\n</form>"
       
-      helper.stub!(:capture_erb_with_buffer).and_return "#{@head}\n#{@form}"
+      helper.stub!(:capture).and_return "#{@head}\n#{@form}"
       helper.stub! :content_for
       helper.stub! :concat
     end
     
     it 'splits off the form head tag from the generated form' do
-      _erbout = ''
-      helper.should_receive(:concat).with('the form', anything())
+      helper.should_receive(:concat).with('the form')
       helper.split_form_for *@args do 'the form' end
     end
     
     it 'captures form head tag to content_for :form' do
-      _erbout = ''
       helper.should_receive(:content_for).with(:form, @head)
       helper.split_form_for *@args do 'the form' end
     end
@@ -43,7 +41,7 @@ describe BaseHelper do
     end
     
     it "returns the passed singluar's pluralization if count equals 1 and no plural has been passed" do
-      Inflector.should_receive(:pluralize).and_return 'cherries'
+      ActiveSupport::Inflector.should_receive(:pluralize).and_return 'cherries'
       helper.pluralize_str(2, @singular).should == 'cherries'
     end
     

@@ -129,7 +129,7 @@ describe "Wiki views:" do
       render "wiki/new"
     end
   end
-
+  
   describe "the edit view" do
     before :each do
       assigns[:wikipage] = @wikipage

@@ -33,6 +33,7 @@ describe WikiController, 'Permissions' do
   end
   
   def should_deny_access(method, path)
+    controller.use_rails_error_handling!
     controller.should_receive :redirect_to_login
     request_to(method, path)
   end

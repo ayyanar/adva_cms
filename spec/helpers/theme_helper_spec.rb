@@ -1,8 +1,15 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe "the action pack asset_helpers" do
+# TODO wow, this sux. patch asset_tag_helpers to use an overwriteable 
+ActionView::Helpers::AssetTagHelper.module_eval <<-eoc
+  ASSETS_DIR.replace "#{RAILS_ROOT}/tmp/cache/site.host"
+  JAVASCRIPTS_DIR.replace "#{RAILS_ROOT}/tmp/cache/site.host/javascripts"
+  STYLESHEETS_DIR.replace "#{RAILS_ROOT}/tmp/cache/site.host/stylesheets"
+eoc
+
+describe "the action pack asset_helper" do
   include ActionView::Helpers::AssetTagHelper
-  
+
   before :each do
     helper.stub!(:join_asset_file_contents).and_return "joined_asset_file_contents"
     helper.stub!(:page_cache_subdirectory).and_return 'tmp/cache/site.host'
@@ -17,14 +24,21 @@ describe "the action pack asset_helpers" do
     FileUtils.rm_r @cache_dir if File.exists? @cache_dir
   end
   
-  it "scopes the stylesheet cache file path to the site's page_cache_subdirectory" do
+  it "#stylesheet_link_tag scopes the stylesheet cache file path to the site's page_cache_subdirectory" do
+    touch_assets(ActionView::Helpers::AssetTagHelper::STYLESHEETS_DIR, 'foo.css', 'bar.css')
     helper.stylesheet_link_tag('foo', 'bar', :cache => 'default') =~ /href="([^"\?]*)(\?|")/
     File.exists?("#{@cache_dir}/stylesheets/default.css").should be_true
   end
   
-  it "scopes the javascript cache file path to the site's page_cache_subdirectory" do
+  it "#javascript_include_tag scopes the javascript cache file path to the site's page_cache_subdirectory" do
+    touch_assets(ActionView::Helpers::AssetTagHelper::JAVASCRIPTS_DIR, 'foo.js', 'bar.js')
     helper.javascript_include_tag('foo', 'bar', :cache => 'default') =~ /src="([^"\?]*)(\?|")/
     File.exists?("#{@cache_dir}/javascripts/default.js").should be_true
+  end
+  
+  def touch_assets(dir, *filenames)
+    FileUtils.mkdir_p dir
+    FileUtils.touch filenames.map{|filename| "#{dir}/#{filename}" }
   end
 end
 

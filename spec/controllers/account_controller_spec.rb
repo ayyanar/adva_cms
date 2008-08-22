@@ -1,6 +1,8 @@
 require File.dirname(__FILE__) + "/../spec_helper"
 
 describe AccountController do
+  integrate_views false
+  
   include Stubby
   include SpecControllerHelper
   
@@ -22,7 +24,7 @@ describe AccountController do
     it_assigns :user
     it_renders_template :new
   end
-
+  
   describe "POST to :create" do
     before :each do 
       @user.stub!(:new_record?).and_return true

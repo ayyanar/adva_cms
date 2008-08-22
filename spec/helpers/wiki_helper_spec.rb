@@ -17,6 +17,12 @@ describe WikiHelper do
   
   def controller
     @controller
+  end  
+  
+  # rails edge
+  attr_writer :output_buffer        
+  def output_buffer
+    @output_buffer ||= ''
   end
   
   describe '#wikipage_path' do

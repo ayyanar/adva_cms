@@ -1,13 +1,13 @@
 ActionView::Base.class_eval do
   alias_method :render_without_widget, :render unless method_defined? :render_without_widget
-  def render(options = {}, old_local_assigns = {}, &block)
+  def render(options = {}, local_assigns = {}, &block) 
     if options.is_a?(Hash) and options[:widget].is_a?(Symbol)
       render_widget options, &block
     else
-      render_without_widget(options, old_local_assigns, &block)
+      render_without_widget(options, local_assigns, &block)
     end
   end
-  
+    
   def render_widget(options, &block)
     widget = controller.widgets[options.delete(:widget)]
     if widget and widget_conditions_satisfied?(widget)

@@ -12,6 +12,8 @@ class Admin::BaseController < ApplicationController
   
   attr_accessor :site
   
+  rescue_from ActionController::RoleRequired, :with => :role_required
+    
   widget :menu_global,   :partial => 'widgets/admin/menu_global'
                          
   widget :menu_site,     :partial => 'widgets/admin/menu_site',
@@ -39,15 +41,20 @@ class Admin::BaseController < ApplicationController
   end
 
   protected
-    
-    def rescue_action(exception)
-      if exception.is_a? ActionController::RoleRequired
-        @error = exception
-        render :template => 'shared/messages/insufficient_permissions'
-      else
-        super
-      end
+  
+    def role_required(exception)
+      @error = exception
+      render :template => 'shared/messages/insufficient_permissions'
     end
+    
+    # def rescue_action(exception)
+    #   if exception.is_a? ActionController::RoleRequired
+    #     @error = exception
+    #     render :template => 'shared/messages/insufficient_permissions'
+    #   else
+    #     super
+    #   end
+    # end
   
     def current_page
       @page ||= params[:page].blank? ? 1 : params[:page].to_i

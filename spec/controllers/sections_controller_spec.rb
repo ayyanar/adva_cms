@@ -61,6 +61,7 @@ describe SectionsController do
         
         describe "and the user does not have :update permissions" do
           before :each do 
+            controller.use_rails_error_handling!
             controller.stub!(:current_user).and_return stub_model(User, :has_role? => false)
           end          
           it_redirects_to { 'http://test.host/login' }

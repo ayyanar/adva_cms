@@ -25,10 +25,15 @@ class SessionController < BaseController
   def destroy
     logout
     flash[:notice] = 'Logout Successful'
-    redirect_to request.relative_url_root.blank? ? '/' : request.relative_url_root
+    redirect_to_root
   end
 
   private
+  
+    def redirect_to_root
+      relative_url_root = ActionController::Base.relative_url_root
+      redirect_to relative_url_root.blank? ? '/' : relative_url_root
+    end
   
     # def reset_session_except(*keys)
     #   preserve = keys.map{|key| session[key] }

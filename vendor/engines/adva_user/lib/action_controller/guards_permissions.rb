@@ -50,13 +50,13 @@ module ActionController
       def guard_permission(*args)
         type = args.pop
         action = args.pop || map_from_controller_action
-        
+
         # TODO :show permissions do not make any sense right now, so we
         # completely deactivate them
         return if action.to_sym == :show 
         
         unless has_permission?(action, type)
-          role =  current_role_context.role_authorizing(action, type)
+          role = current_role_context.role_authorizing(action, type)
           raise RoleRequired.new role, action, type
         end
       end
