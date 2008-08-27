@@ -47,14 +47,14 @@ class Admin::BaseController < ApplicationController
       render :template => 'shared/messages/insufficient_permissions'
     end
     
-    # def rescue_action(exception)
-    #   if exception.is_a? ActionController::RoleRequired
-    #     @error = exception
-    #     render :template => 'shared/messages/insufficient_permissions'
-    #   else
-    #     super
-    #   end
-    # end
+    def rescue_action(exception)
+      if exception.is_a? ActionController::RoleRequired
+        @error = exception
+        render :template => 'shared/messages/insufficient_permissions'
+      else
+        super
+      end
+    end
   
     def current_page
       @page ||= params[:page].blank? ? 1 : params[:page].to_i
